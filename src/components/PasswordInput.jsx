@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useI18n } from '../hooks/useI18n.jsx'
 
-export default function PasswordInput({ id, value, onChange, placeholder, autoComplete }) {
+export default function PasswordInput({ id, value, onChange, placeholder, autoComplete, ...rest }) {
   const { t } = useI18n()
   const [show, setShow] = useState(false)
   return (
@@ -14,6 +14,7 @@ export default function PasswordInput({ id, value, onChange, placeholder, autoCo
         onChange={onChange}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        {...rest}
       />
       <button
         type="button"

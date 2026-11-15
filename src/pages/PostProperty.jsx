@@ -41,7 +41,7 @@ export default function PostProperty() {
   const { addProperty } = useProperties()
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState(INITIAL)
+  const [form, setForm] = useState(() => ({ ...INITIAL, phone: user?.username ?? '' }))
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
