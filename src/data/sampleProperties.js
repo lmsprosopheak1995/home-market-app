@@ -1,4 +1,7 @@
-const img = (seed) => `https://picsum.photos/seed/${seed}/900/675`
+const img = (c1, c2) =>
+  `data:image/svg+xml;utf8,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 675"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><rect width="900" height="675" fill="url(#g)"/><path d="M300 400L450 280L600 400V500H300Z" fill="rgba(255,255,255,.78)"/><rect x="420" y="420" width="60" height="80" fill="rgba(20,33,61,.35)"/></svg>`
+  )}`
 
 export const sampleProperties = [
   {
@@ -13,7 +16,7 @@ export const sampleProperties = [
     area: 220,
     description:
       'ផ្ទះវីឡា ២ ជាន់ មានចំណតឡានពីរ សួនតូចខាងមុខ និងបន្ទប់ទទួលភ្ញៀវធំទូលាយ។ ផ្លូវបេតុងធំ ជិតសាលារៀន និងផ្សារ។',
-    image: img('villa-pp'),
+    image: img('#0F766E', '#14213D'),
     phone: '012345678',
     createdAt: '2026-10-20T08:00:00Z',
   },
@@ -29,7 +32,7 @@ export const sampleProperties = [
     area: 55,
     description:
       'ខុនដូមានគ្រឿងសង្ហារឹមពេញលេញ ម៉ាស៊ីនត្រជាក់ ស្រះទឹកហែល និងកន្លែងហាត់ប្រាណ។ សុវត្ថិភាព ២៤ ម៉ោង។',
-    image: img('condo-river'),
+    image: img('#3B82F6', '#14213D'),
     phone: '098765432',
     createdAt: '2026-10-28T08:00:00Z',
   },
@@ -44,7 +47,7 @@ export const sampleProperties = [
     bathrooms: 0,
     area: 400,
     description: 'ដីមានប្លង់រឹង ទំហំ ១០ គុណ ៤០ ម៉ែត្រ ជាប់ផ្លូវធំ ទឹកភ្លើងមានស្រាប់ សមស្របសម្រាប់សង់ផ្ទះ ឬដាក់ជួល។',
-    image: img('land-kandal'),
+    image: img('#84A98C', '#2F3E46'),
     phone: '011223344',
     createdAt: '2026-11-01T08:00:00Z',
   },
@@ -59,7 +62,7 @@ export const sampleProperties = [
     bathrooms: 2,
     area: 120,
     description: 'ផ្ទះល្វែងស្អាត សមស្របជាផ្ទះគ្រួសារ ឬការិយាល័យ។ ជិតផ្សារ ហាងកាហ្វេ និងភោជនីយដ្ឋាន។',
-    image: img('shophouse-sr'),
+    image: img('#E9A23B', '#7C3E12'),
     phone: '077889900',
     createdAt: '2026-11-05T08:00:00Z',
   },
@@ -74,7 +77,7 @@ export const sampleProperties = [
     bathrooms: 1,
     area: 25,
     description: 'បន្ទប់ស្អាត មានបន្ទប់ទឹកផ្ទាល់ខ្លួន ទឹកភ្លើងតាមតម្លៃរដ្ឋ មានកន្លែងចតម៉ូតូ។',
-    image: img('room-btb'),
+    image: img('#7C9CBF', '#1E3A5F'),
     phone: '085112233',
     createdAt: '2026-11-08T08:00:00Z',
   },
@@ -89,7 +92,7 @@ export const sampleProperties = [
     bathrooms: 2,
     area: 180,
     description: 'ផ្ទះមួយជាន់ ទំហំដីធំ ដើរទៅឆ្នេរបានក្នុង ៥ នាទី។ សមស្របសម្រាប់ស្នាក់នៅ ឬធ្វើផ្ទះសំណាក់។',
-    image: img('house-kep'),
+    image: img('#2DA8A0', '#0B3C49'),
     phone: '096554433',
     createdAt: '2026-11-10T08:00:00Z',
   },

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { LOCATIONS, PROPERTY_TYPES, PURPOSES } from '../data/options'
 import { useProperties } from '../hooks/useProperties.jsx'
 import { resizeImage } from '../lib/image'
+import { useAuth } from '../hooks/useAuth.jsx'
 
 const INITIAL = {
   title: '',
@@ -35,6 +36,7 @@ function Err({ message }) {
 
 export default function PostProperty() {
   const { addProperty } = useProperties()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState(INITIAL)
   const [errors, setErrors] = useState({})
@@ -76,6 +78,7 @@ export default function PostProperty() {
         phone: form.phone.replace(/\s/g, ''),
         description: form.description.trim(),
         image: form.image,
+        owner: user?.username ?? null,
       })
       navigate(`/property/${created.id}`)
     } catch (err) {

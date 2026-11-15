@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { supabase } from '../lib/supabaseClient'
 import { sampleProperties } from '../data/sampleProperties'
 
-const STORAGE_KEY = 'home-market:properties'
+const STORAGE_KEY = 'home-market:properties:v2'
 const PropertiesContext = createContext(null)
 
 const fromRow = ({ created_at, ...rest }) => ({ ...rest, createdAt: created_at })

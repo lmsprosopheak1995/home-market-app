@@ -30,6 +30,7 @@ create table properties (
   phone text not null,
   description text not null,
   image text not null,
+  owner text,
   created_at timestamptz default now()
 );
 

@@ -12,9 +12,10 @@ export default function Navbar() {
         <Link to="/" className="text-lg font-bold">ទីផ្សារផ្ទះ</Link>
         <nav className="flex flex-wrap items-center gap-1">
           <NavLink to="/" end className={linkClass}>ទំព័រដើម</NavLink>
+          <NavLink to="/market" className={linkClass}>ទីផ្សារ</NavLink>
           {user ? (
             <>
-              <span className="px-2 text-sm text-white/70">{user.username}</span>
+              <Link to="/me" className="px-2 text-sm text-white/80 hover:underline">{user.username}</Link>
               <button onClick={logout} className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-white/10">ចាកចេញ</button>
             </>
           ) : (
