@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
+import { LOCATIONS, PROPERTY_TYPES, PURPOSES, optionLabel } from '../data/options'
+import { useI18n } from '../hooks/useI18n.jsx'
 import { formatPrice } from '../lib/format'
 
 export default function PropertyCard({ property }) {
+  const { t } = useI18n()
   const { id, title, type, purpose, price, location, bedrooms, bathrooms, area, image } = property
   const isRent = purpose === 'ជួល'
 
@@ -22,19 +25,19 @@ export default function PropertyCard({ property }) {
             isRent ? 'bg-gold text-ink' : 'bg-brand text-white'
           }`}
         >
-          {purpose}
+          {optionLabel(t, 'purpose', PURPOSES, purpose)}
         </span>
       </div>
       <div className="p-4">
-        <p className="text-xl font-bold text-brand">{formatPrice(price, purpose)}</p>
+        <p className="text-xl font-bold text-brand">{formatPrice(price, purpose, t('price.perMonth'))}</p>
         <h3 className="mt-1 line-clamp-1 font-semibold">{title}</h3>
         <p className="text-sm text-ink/60">
-          {type} · {location}
+          {optionLabel(t, 'type', PROPERTY_TYPES, type)} · {optionLabel(t, 'loc', LOCATIONS, location)}
         </p>
         <div className="mt-3 flex gap-4 border-t border-line pt-3 text-sm text-ink/80">
-          {bedrooms > 0 && <span>{bedrooms} បន្ទប់គេង</span>}
-          {bathrooms > 0 && <span>{bathrooms} បន្ទប់ទឹក</span>}
-          <span>{area} ម²</span>
+          {bedrooms > 0 && <span>{t('card.bedrooms', { n: bedrooms })}</span>}
+          {bathrooms > 0 && <span>{t('card.bathrooms', { n: bathrooms })}</span>}
+          <span>{area} m²</span>
         </div>
       </div>
     </Link>

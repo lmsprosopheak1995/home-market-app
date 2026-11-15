@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useI18n } from '../hooks/useI18n.jsx'
 
 const icons = {
   home: 'M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V11z',
@@ -8,15 +9,16 @@ const icons = {
 }
 
 const items = [
-  { to: '/', label: 'ទំព័រដើម', icon: 'home', end: true },
-  { to: '/market', label: 'ទីផ្សារ', icon: 'market' },
-  { to: '/post', label: 'ផ្សាយ', icon: 'plus' },
-  { to: '/me', label: 'ខ្ញុំ', icon: 'user' },
+  { to: '/', label: 'nav.home', icon: 'home', end: true },
+  { to: '/market', label: 'nav.market', icon: 'market' },
+  { to: '/post', label: 'nav.postShort', icon: 'plus' },
+  { to: '/me', label: 'nav.me', icon: 'user' },
 ]
 
 export default function BottomNav() {
+  const { t } = useI18n()
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white md:hidden" aria-label="ម៉ឺនុយមូលដ្ឋាន">
+    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white md:hidden" aria-label={t('nav.menuLabel')}>
       <ul className="grid grid-cols-4">
         {items.map(({ to, label, icon, end }) => (
           <li key={to}>
@@ -30,7 +32,7 @@ export default function BottomNav() {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d={icons[icon]} />
               </svg>
-              {label}
+              {t(label)}
             </NavLink>
           </li>
         ))}

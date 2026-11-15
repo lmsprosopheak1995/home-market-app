@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import { useI18n } from '../hooks/useI18n.jsx'
 
 export default function PasswordInput({ id, value, onChange, placeholder, autoComplete }) {
+  const { t } = useI18n()
   const [show, setShow] = useState(false)
   return (
     <div className="relative">
       <input
         id={id}
         type={show ? 'text' : 'password'}
-        className="field pr-16"
+        className="field pr-20"
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -19,7 +21,7 @@ export default function PasswordInput({ id, value, onChange, placeholder, autoCo
         aria-pressed={show}
         className="absolute inset-y-0 right-2 px-2 text-sm text-brand hover:underline"
       >
-        {show ? 'លាក់' : 'បង្ហាញ'}
+        {show ? t('auth.hide') : t('auth.show')}
       </button>
     </div>
   )

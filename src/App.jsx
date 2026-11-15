@@ -1,4 +1,5 @@
 import { Link, Route, Routes } from 'react-router-dom'
+import { useI18n } from './hooks/useI18n.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
@@ -12,11 +13,12 @@ import Register from './pages/Register.jsx'
 import RequireAuth from './components/RequireAuth.jsx'
 
 function NotFound() {
+  const { t } = useI18n()
   return (
     <div className="py-24 text-center">
-      <h1 className="text-2xl font-bold">រកមិនឃើញទំព័រនេះទេ</h1>
-      <p className="mt-2 text-ink/70">តំណភ្ជាប់អាចខុស ឬទំព័រត្រូវបានលុប។</p>
-      <Link to="/" className="btn-primary mt-6">ត្រឡប់ទៅទំព័រដើម</Link>
+      <h1 className="text-2xl font-bold">{t('notFound.title')}</h1>
+      <p className="mt-2 text-ink/70">{t('notFound.desc')}</p>
+      <Link to="/" className="btn-primary mt-6">{t('notFound.back')}</Link>
     </div>
   )
 }

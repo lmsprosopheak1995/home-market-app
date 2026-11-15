@@ -11,7 +11,7 @@ export default {
         gold: { DEFAULT: '#E9A23B', soft: '#FDF1DC' },
       },
       fontFamily: {
-        sans: ['"Kantumruy Pro"', '"Noto Sans Khmer"', 'system-ui', 'sans-serif'],
+        sans: ['"Kantumruy Pro"', '"Noto Sans Khmer"', '"Noto Sans Devanagari"', '"Noto Sans JP"', '"Noto Sans KR"', 'system-ui', 'sans-serif'],
       },
     },
   },

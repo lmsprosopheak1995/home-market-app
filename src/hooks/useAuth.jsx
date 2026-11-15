@@ -47,14 +47,14 @@ export function AuthProvider({ children }) {
         options: { data: { username, invitation_code: invitationCode || null } },
       })
       if (error) {
-        if (/already/i.test(error.message)) throw new Error('ឈ្មោះអ្នកប្រើនេះមានរួចហើយ')
+        if (/already/i.test(error.message)) throw new Error('err.exists')
         throw new Error(error.message)
       }
       return
     }
     const users = read(USERS_KEY, {})
     const key = username.toLowerCase()
-    if (users[key]) throw new Error('ឈ្មោះអ្នកប្រើនេះមានរួចហើយ')
+    if (users[key]) throw new Error('err.exists')
     users[key] = { username, passwordHash: await sha256(key + password), invitationCode: invitationCode || null }
     localStorage.setItem(USERS_KEY, JSON.stringify(users))
     const session = { username }
@@ -63,7 +63,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = useCallback(async ({ username, password }) => {
-    const bad = new Error('ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ')
+    const bad = new Error('err.badLogin')
     if (supabase) {
       const { error } = await supabase.auth.signInWithPassword({ email: toEmail(username), password })
       if (error) throw bad

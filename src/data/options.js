@@ -10,3 +10,9 @@ export const LOCATIONS = [
   'ព្រះសីហនុ',
   'កំពង់ចាម',
 ]
+
+// បង្ហាញឈ្មោះតាមភាសា (តម្លៃដែលរក្សាទុកនៅតែជាខ្មែរ)
+export function optionLabel(t, prefix, list, value) {
+  const i = list.indexOf(value)
+  return i < 0 ? value : t(`${prefix}.${i}`)
+}

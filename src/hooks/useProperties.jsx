@@ -31,7 +31,7 @@ export function PropertiesProvider({ children }) {
       .select('*')
       .order('created_at', { ascending: false })
       .then(({ data, error }) => {
-        if (error) setError('មិនអាចទាញទិន្នន័យបានទេ៖ ' + error.message)
+        if (error) setError(error.message)
         else setProperties(data.map(fromRow))
         setLoading(false)
       })

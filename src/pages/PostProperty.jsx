@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LOCATIONS, PROPERTY_TYPES, PURPOSES } from '../data/options'
+import { LOCATIONS, PROPERTY_TYPES, PURPOSES, optionLabel } from '../data/options'
+import { useAuth } from '../hooks/useAuth.jsx'
+import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
 import { resizeImage } from '../lib/image'
-import { useAuth } from '../hooks/useAuth.jsx'
 
 const INITIAL = {
   title: '',
@@ -21,20 +22,22 @@ const INITIAL = {
 
 function validate(f) {
   const e = {}
-  if (f.title.trim().length < 5) e.title = 'ចំណងជើងត្រូវមានយ៉ាងតិច ៥ តួអក្សរ'
-  if (!(Number(f.price) > 0)) e.price = 'សូមបញ្ចូលតម្លៃជាលេខធំជាង 0'
-  if (!(Number(f.area) > 0)) e.area = 'សូមបញ្ចូលទំហំជាលេខធំជាង 0'
-  if (!/^0\d{8,9}$/.test(f.phone.replace(/\s/g, ''))) e.phone = 'លេខទូរស័ព្ទមិនត្រឹមត្រូវ (ឧ. 012345678)'
-  if (f.description.trim().length < 20) e.description = 'ការពិពណ៌នាត្រូវមានយ៉ាងតិច ២០ តួអក្សរ'
-  if (!f.image) e.image = 'សូមបញ្ចូលរូបភាពយ៉ាងតិចមួយ'
+  if (f.title.trim().length < 5) e.title = 'val.title'
+  if (!(Number(f.price) > 0)) e.price = 'val.price'
+  if (!(Number(f.area) > 0)) e.area = 'val.area'
+  if (!/^0\d{8,9}$/.test(f.phone.replace(/\s/g, ''))) e.phone = 'val.phone'
+  if (f.description.trim().length < 20) e.description = 'val.desc'
+  if (!f.image) e.image = 'val.image'
   return e
 }
 
 function Err({ message }) {
-  return message ? <p className="mt-1 text-sm text-red-600">{message}</p> : null
+  const { t } = useI18n()
+  return message ? <p className="mt-1 text-sm text-red-600">{t(message)}</p> : null
 }
 
 export default function PostProperty() {
+  const { t } = useI18n()
   const { addProperty } = useProperties()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -82,86 +85,84 @@ export default function PostProperty() {
       })
       navigate(`/property/${created.id}`)
     } catch (err) {
-      setSubmitError('ផ្សាយមិនបានសម្រេច៖ ' + err.message)
+      setSubmitError(`${t('post.submitFail')}: ${err.message}`)
       setSubmitting(false)
     }
   }
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold">ផ្សាយអចលនទ្រព្យ</h1>
-      <p className="mt-1 text-ink/70">បំពេញព័ត៌មានខាងក្រោម ហើយចុច «ផ្សាយឥឡូវនេះ»។</p>
+      <h1 className="text-2xl font-bold">{t('post.title')}</h1>
+      <p className="mt-1 text-ink/70">{t('post.subtitle')}</p>
 
       <form onSubmit={onSubmit} noValidate className="mt-6 space-y-5 rounded-xl border border-line bg-white p-5">
         <div>
-          <label htmlFor="title" className="label">ចំណងជើង</label>
-          <input id="title" className="field" value={form.title} onChange={set('title')} placeholder="ឧ. ផ្ទះវីឡា ២ ជាន់ ជិតសួនច្បារ" />
+          <label htmlFor="title" className="label">{t('post.titleLabel')}</label>
+          <input id="title" className="field" value={form.title} onChange={set('title')} placeholder={t('post.titlePlaceholder')} />
           <Err message={errors.title} />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="purpose" className="label">លក់ ឬជួល</label>
+            <label htmlFor="purpose" className="label">{t('post.purposeLabel')}</label>
             <select id="purpose" className="field" value={form.purpose} onChange={set('purpose')}>
-              {PURPOSES.map((p) => <option key={p}>{p}</option>)}
+              {PURPOSES.map((p) => <option key={p} value={p}>{optionLabel(t, 'purpose', PURPOSES, p)}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="type" className="label">ប្រភេទ</label>
+            <label htmlFor="type" className="label">{t('post.typeLabel')}</label>
             <select id="type" className="field" value={form.type} onChange={set('type')}>
-              {PROPERTY_TYPES.map((t) => <option key={t}>{t}</option>)}
+              {PROPERTY_TYPES.map((x) => <option key={x} value={x}>{optionLabel(t, 'type', PROPERTY_TYPES, x)}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="price" className="label">
-              តម្លៃ ($){form.purpose === 'ជួល' && ' ក្នុងមួយខែ'}
-            </label>
+            <label htmlFor="price" className="label">{form.purpose === 'ជួល' ? t('post.priceRent') : t('post.price')}</label>
             <input id="price" type="number" min="0" className="field" value={form.price} onChange={set('price')} />
             <Err message={errors.price} />
           </div>
           <div>
-            <label htmlFor="location" className="label">ទីតាំង</label>
+            <label htmlFor="location" className="label">{t('post.location')}</label>
             <select id="location" className="field" value={form.location} onChange={set('location')}>
-              {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
+              {LOCATIONS.map((l) => <option key={l} value={l}>{optionLabel(t, 'loc', LOCATIONS, l)}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="bedrooms" className="label">បន្ទប់គេង</label>
+            <label htmlFor="bedrooms" className="label">{t('post.bedrooms')}</label>
             <input id="bedrooms" type="number" min="0" className="field" value={form.bedrooms} onChange={set('bedrooms')} />
           </div>
           <div>
-            <label htmlFor="bathrooms" className="label">បន្ទប់ទឹក</label>
+            <label htmlFor="bathrooms" className="label">{t('post.bathrooms')}</label>
             <input id="bathrooms" type="number" min="0" className="field" value={form.bathrooms} onChange={set('bathrooms')} />
           </div>
           <div>
-            <label htmlFor="area" className="label">ទំហំ (ម²)</label>
+            <label htmlFor="area" className="label">{t('post.area')}</label>
             <input id="area" type="number" min="0" className="field" value={form.area} onChange={set('area')} />
             <Err message={errors.area} />
           </div>
           <div>
-            <label htmlFor="phone" className="label">លេខទូរស័ព្ទ</label>
+            <label htmlFor="phone" className="label">{t('post.phone')}</label>
             <input id="phone" type="tel" className="field" value={form.phone} onChange={set('phone')} placeholder="012345678" />
             <Err message={errors.phone} />
           </div>
         </div>
 
         <div>
-          <label htmlFor="description" className="label">ពិពណ៌នា</label>
-          <textarea id="description" rows={5} className="field" value={form.description} onChange={set('description')} placeholder="ប្រាប់អំពីស្ថានភាព ផ្លូវ ជិតអ្វី និងអ្វីដែលរួមបញ្ចូល" />
+          <label htmlFor="description" className="label">{t('post.description')}</label>
+          <textarea id="description" rows={5} className="field" value={form.description} onChange={set('description')} placeholder={t('post.descPlaceholder')} />
           <Err message={errors.description} />
         </div>
 
         <div>
-          <label htmlFor="image" className="label">រូបភាព</label>
+          <label htmlFor="image" className="label">{t('post.image')}</label>
           <input id="image" type="file" accept="image/*" onChange={onImage} className="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-2 file:font-medium file:text-brand" />
           <Err message={errors.image} />
-          {form.image && <img src={form.image} alt="មើលរូបភាពជាមុន" className="mt-3 aspect-[4/3] w-full max-w-xs rounded-lg object-cover" />}
+          {form.image && <img src={form.image} alt={t('post.preview')} className="mt-3 aspect-[4/3] w-full max-w-xs rounded-lg object-cover" />}
         </div>
 
         {submitError && <p className="rounded-lg bg-red-50 p-3 text-red-700">{submitError}</p>}
 
         <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60">
-          {submitting ? 'កំពុងផ្សាយ…' : 'ផ្សាយឥឡូវនេះ'}
+          {submitting ? t('post.submitting') : t('post.submit')}
         </button>
       </form>
     </div>

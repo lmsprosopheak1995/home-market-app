@@ -2,10 +2,10 @@
 export function resizeImage(file, maxWidth = 1000, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.onerror = () => reject(new Error('មិនអាចអានរូបភាពបានទេ'))
+    reader.onerror = () => reject(new Error('err.imgRead'))
     reader.onload = () => {
       const img = new Image()
-      img.onerror = () => reject(new Error('ឯកសារនេះមិនមែនជារូបភាពទេ'))
+      img.onerror = () => reject(new Error('err.imgInvalid'))
       img.onload = () => {
         const scale = Math.min(1, maxWidth / img.width)
         const canvas = document.createElement('canvas')
