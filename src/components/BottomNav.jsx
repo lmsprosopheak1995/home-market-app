@@ -18,7 +18,7 @@ const items = [
 export default function BottomNav() {
   const { t } = useI18n()
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white md:hidden" aria-label={t('nav.menuLabel')}>
+    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} aria-label={t('nav.menuLabel')}>
       <ul className="grid grid-cols-4">
         {items.map(({ to, label, icon, end }) => (
           <li key={to}>
@@ -26,7 +26,7 @@ export default function BottomNav() {
               to={to}
               end={end}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 py-2 text-xs font-medium ${isActive ? 'text-brand' : 'text-ink/60'}`
+                `flex min-h-[56px] flex-col items-center justify-center gap-0.5 py-2 text-xs font-medium ${isActive ? 'text-brand' : 'text-ink/60'}`
               }
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

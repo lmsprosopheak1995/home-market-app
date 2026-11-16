@@ -8,6 +8,8 @@ import PostProperty from './pages/PostProperty.jsx'
 import Market from './pages/Market.jsx'
 import Me from './pages/Me.jsx'
 import BottomNav from './components/BottomNav.jsx'
+import Commissions from './pages/Commissions.jsx'
+import Promote from './pages/Promote.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import RequireAuth from './components/RequireAuth.jsx'
@@ -27,13 +29,15 @@ export default function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-24 md:pb-6">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-6">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/market" element={<Market />} />
           <Route path="/me" element={<Me />} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/post" element={<RequireAuth><PostProperty /></RequireAuth>} />
+          <Route path="/commissions" element={<RequireAuth><Commissions /></RequireAuth>} />
+          <Route path="/promote" element={<RequireAuth><Promote /></RequireAuth>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />

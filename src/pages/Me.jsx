@@ -37,7 +37,13 @@ export default function Me() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-bold">{t('me.myListings', { n: mine.length })}</h2>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-lg font-bold">{t('me.myListings', { n: mine.length })}</h2>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/commissions" className="btn-ghost !py-1.5 text-sm">{t('me.commissions')}</Link>
+            {mine.length > 0 && <Link to="/promote" className="btn-gold !py-1.5 text-sm">{t('me.promote')}</Link>}
+          </div>
+        </div>
         {mine.length === 0 ? (
           <div className="rounded-xl border border-dashed border-line bg-white py-12 text-center">
             <p className="font-semibold">{t('me.noListings')}</p>

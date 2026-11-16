@@ -28,6 +28,7 @@ export default function PropertyDetail() {
     p.bedrooms > 0 && [t('spec.bedrooms'), p.bedrooms],
     p.bathrooms > 0 && [t('spec.bathrooms'), p.bathrooms],
     [t('spec.area'), `${p.area} m²`],
+    p.commission != null && [t('spec.commission'), `${p.commission}%`],
     [t('spec.posted'), formatDate(p.createdAt, locale)],
   ].filter(Boolean)
 
@@ -37,10 +38,12 @@ export default function PropertyDetail() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-5 lg:col-span-2">
-          <img src={p.image} alt={p.title} className="aspect-[4/3] w-full rounded-xl object-cover" />
+          <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-line">
+            <img src={p.image} alt={p.title} className="h-full w-full object-cover" />
+          </div>
           <section className="rounded-xl border border-line bg-white p-5">
             <h2 className="mb-2 text-lg font-bold">{t('detail.description')}</h2>
-            <p className="whitespace-pre-line text-ink/80">{p.description}</p>
+            <p className="whitespace-pre-line break-words text-ink/80">{p.description}</p>
           </section>
         </div>
 
@@ -49,7 +52,7 @@ export default function PropertyDetail() {
             <span className={`rounded-md px-2 py-0.5 text-sm font-semibold ${p.purpose === 'ជួល' ? 'bg-gold text-ink' : 'bg-brand text-white'}`}>
               {optionLabel(t, 'purpose', PURPOSES, p.purpose)}
             </span>
-            <h1 className="mt-2 text-xl font-bold">{p.title}</h1>
+            <h1 className="mt-2 break-words text-xl font-bold">{p.title}</h1>
             <p className="mt-1 text-2xl font-bold text-brand">{formatPrice(p.price, p.purpose, t('price.perMonth'))}</p>
             <dl className="mt-4 divide-y divide-line text-sm">
               {specs.map(([k, v]) => (

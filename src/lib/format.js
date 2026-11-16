@@ -14,3 +14,7 @@ export function formatDate(iso, locale = 'en-GB') {
     return ''
   }
 }
+
+export function isFeatured(p) {
+  return Boolean(p?.featuredUntil) && new Date(p.featuredUntil) > new Date()
+}

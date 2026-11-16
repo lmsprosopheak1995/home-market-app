@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth.jsx'
 import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
 import { resizeImage } from '../lib/image'
+import { COMMISSION } from '../config/payments'
 
 const INITIAL = {
   title: '',
@@ -18,6 +19,7 @@ const INITIAL = {
   phone: '',
   description: '',
   image: '',
+  commission: String(COMMISSION.default),
 }
 
 function validate(f) {
@@ -28,12 +30,14 @@ function validate(f) {
   if (!/^0\d{8,9}$/.test(f.phone.replace(/\s/g, ''))) e.phone = 'val.phone'
   if (f.description.trim().length < 20) e.description = 'val.desc'
   if (!f.image) e.image = 'val.image'
+  const c = Number(f.commission)
+  if (!(c >= COMMISSION.min && c <= COMMISSION.max)) e.commission = 'val.commission'
   return e
 }
 
 function Err({ message }) {
   const { t } = useI18n()
-  return message ? <p className="mt-1 text-sm text-red-600">{t(message)}</p> : null
+  return message ? <p className="mt-1 text-sm text-red-600">{t(message, { min: COMMISSION.min, max: COMMISSION.max })}</p> : null
 }
 
 export default function PostProperty() {
@@ -81,6 +85,7 @@ export default function PostProperty() {
         phone: form.phone.replace(/\s/g, ''),
         description: form.description.trim(),
         image: form.image,
+        commission: Number(form.commission),
         owner: user?.username ?? null,
       })
       navigate(`/property/${created.id}`)
@@ -144,6 +149,12 @@ export default function PostProperty() {
             <input id="phone" type="tel" className="field" value={form.phone} onChange={set('phone')} placeholder="012345678" />
             <Err message={errors.phone} />
           </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="commission" className="label">{t('commission.label')}</label>
+            <input id="commission" type="number" inputMode="decimal" step="0.5" min={COMMISSION.min} max={COMMISSION.max} className="field" value={form.commission} onChange={set('commission')} />
+            <p className="mt-1 text-sm text-ink/60">{t('commission.hint')}</p>
+            <Err message={errors.commission} />
+          </div>
         </div>
 
         <div>
@@ -156,7 +167,11 @@ export default function PostProperty() {
           <label htmlFor="image" className="label">{t('post.image')}</label>
           <input id="image" type="file" accept="image/*" onChange={onImage} className="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-2 file:font-medium file:text-brand" />
           <Err message={errors.image} />
-          {form.image && <img src={form.image} alt={t('post.preview')} className="mt-3 aspect-[4/3] w-full max-w-xs rounded-lg object-cover" />}
+          {form.image && (
+            <div className="mt-3 aspect-[4/3] w-full max-w-xs overflow-hidden rounded-lg bg-line">
+              <img src={form.image} alt={t('post.preview')} className="h-full w-full object-cover" />
+            </div>
+          )}
         </div>
 
         {submitError && <p className="rounded-lg bg-red-50 p-3 text-red-700">{submitError}</p>}

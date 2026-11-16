@@ -5,7 +5,11 @@ import { sampleProperties } from '../data/sampleProperties'
 const STORAGE_KEY = 'home-market:properties:v2'
 const PropertiesContext = createContext(null)
 
-const fromRow = ({ created_at, ...rest }) => ({ ...rest, createdAt: created_at })
+const fromRow = ({ created_at, featured_until, ...rest }) => ({
+  ...rest,
+  createdAt: created_at,
+  featuredUntil: featured_until ?? null,
+})
 
 function loadLocal() {
   try {

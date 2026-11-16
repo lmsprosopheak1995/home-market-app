@@ -1,0 +1,16 @@
+{
+  "name": "ទីផ្សារផ្ទះ — Home Market",
+  "short_name": "Home Market",
+  "description": "ទិញ លក់ ជួល អចលនទ្រព្យនៅកម្ពុជា",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F4F7F6",
+  "theme_color": "#14213D",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -4,6 +4,7 @@ import PropertyCard from '../components/PropertyCard.jsx'
 import SearchFilter from '../components/SearchFilter.jsx'
 import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
+import { isFeatured } from '../lib/format'
 
 const EMPTY = { q: '', purpose: '', type: '', location: '', maxPrice: '' }
 
@@ -22,7 +23,7 @@ export default function Market() {
       if (max && p.price > max) return false
       if (q && !`${p.title} ${p.description} ${p.location}`.toLowerCase().includes(q)) return false
       return true
-    })
+    }).sort((a, b) => Number(isFeatured(b)) - Number(isFeatured(a)))
   }, [properties, filters])
 
   return (

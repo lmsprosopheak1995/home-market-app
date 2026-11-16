@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { LOCATIONS, PROPERTY_TYPES, PURPOSES, optionLabel } from '../data/options'
 import { useI18n } from '../hooks/useI18n.jsx'
-import { formatPrice } from '../lib/format'
+import { formatPrice, isFeatured } from '../lib/format'
 
 export default function PropertyCard({ property }) {
   const { t } = useI18n()
@@ -27,6 +27,11 @@ export default function PropertyCard({ property }) {
         >
           {optionLabel(t, 'purpose', PURPOSES, purpose)}
         </span>
+        {isFeatured(property) && (
+          <span className="absolute right-3 top-3 rounded-md bg-ink px-2 py-0.5 text-sm font-semibold text-gold">
+            {t('badge.featured')}
+          </span>
+        )}
       </div>
       <div className="p-4">
         <p className="text-xl font-bold text-brand">{formatPrice(price, purpose, t('price.perMonth'))}</p>
@@ -34,7 +39,7 @@ export default function PropertyCard({ property }) {
         <p className="text-sm text-ink/60">
           {optionLabel(t, 'type', PROPERTY_TYPES, type)} · {optionLabel(t, 'loc', LOCATIONS, location)}
         </p>
-        <div className="mt-3 flex gap-4 border-t border-line pt-3 text-sm text-ink/80">
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-3 text-sm text-ink/80">
           {bedrooms > 0 && <span>{t('card.bedrooms', { n: bedrooms })}</span>}
           {bathrooms > 0 && <span>{t('card.bathrooms', { n: bathrooms })}</span>}
           <span>{area} m²</span>

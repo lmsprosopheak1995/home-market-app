@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom'
 import PropertyCard from '../components/PropertyCard.jsx'
 import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
+import { isFeatured } from '../lib/format'
 
 export default function Home() {
   const { t } = useI18n()
   const { properties, loading } = useProperties()
   const latest = [...properties]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .sort((a, b) => Number(isFeatured(b)) - Number(isFeatured(a)) || new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3)
 
   return (

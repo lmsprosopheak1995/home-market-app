@@ -10,9 +10,9 @@ export default function Navbar() {
     `rounded-lg px-3 py-2 text-sm font-medium ${isActive ? 'bg-white/15' : 'hover:bg-white/10'}`
 
   return (
-    <header className="bg-ink text-white">
+    <header className="bg-ink pt-[env(safe-area-inset-top)] text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <Link to="/" className="text-lg font-bold">{t('brand')}</Link>
+        <Link to="/" className="shrink-0 text-lg font-bold">{t('brand')}</Link>
         <nav className="flex flex-wrap items-center justify-end gap-1">
           <NavLink to="/" end className={(s) => `hidden md:inline-block ${linkClass(s)}`}>{t('nav.home')}</NavLink>
           <NavLink to="/market" className={(s) => `hidden md:inline-block ${linkClass(s)}`}>{t('nav.market')}</NavLink>
@@ -28,11 +28,11 @@ export default function Navbar() {
             aria-label={t('lang.label')}
             value={lang}
             onChange={(e) => setLang(e.target.value)}
-            className="rounded-lg border border-white/25 bg-ink px-2 py-1.5 text-sm text-white"
+            className="min-h-[40px] max-w-[9rem] rounded-lg border border-white/25 bg-ink px-2 py-1.5 text-sm text-white"
           >
             {LANGUAGES.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
           </select>
-          <Link to="/post" className="btn-gold ml-1 !py-1.5 text-sm">{t('nav.post')}</Link>
+          <Link to="/post" className="btn-gold ml-1 hidden !py-1.5 text-sm sm:inline-flex">{t('nav.post')}</Link>
         </nav>
       </div>
     </header>
