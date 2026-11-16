@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { ADMIN_PHONES } from '../config/agency'
 
 const USERS_KEY = 'home-market:users'
 const SESSION_KEY = 'home-market:session'
@@ -7,6 +8,8 @@ const AuthContext = createContext(null)
 
 // Supabase Auth ប្រើ email ដូច្នេះបម្លែងឈ្មោះអ្នកប្រើជា email ក្លែងក្លាយ
 const toEmail = (username) => `${username.toLowerCase()}@users.home-market.app`
+
+const withFlags = (s) => ({ ...s, isAdmin: ADMIN_PHONES.includes(s.username) })
 
 const read = (key, fallback) => {
   try {
@@ -27,7 +30,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (supabase) {
-      const toUser = (s) => (s?.user ? { username: s.user.user_metadata?.username ?? s.user.email } : null)
+      const toUser = (s) =>
+        s?.user
+          ? {
+              username: s.user.user_metadata?.username ?? s.user.email,
+              isAdmin: s.user.app_metadata?.role === 'admin',
+              invitationCode: s.user.user_metadata?.invitation_code ?? null,
+              createdAt: s.user.created_at ?? null,
+            }
+          : null
       supabase.auth.getSession().then(({ data }) => {
         setUser(toUser(data.session))
         setReady(true)
@@ -35,7 +46,8 @@ export function AuthProvider({ children }) {
       const { data } = supabase.auth.onAuthStateChange((_e, s) => setUser(toUser(s)))
       return () => data.subscription.unsubscribe()
     }
-    setUser(read(SESSION_KEY, null))
+    const saved = read(SESSION_KEY, null)
+    setUser(saved ? withFlags(saved) : null)
     setReady(true)
   }, [])
 
@@ -55,11 +67,11 @@ export function AuthProvider({ children }) {
     const users = read(USERS_KEY, {})
     const key = username.toLowerCase()
     if (users[key]) throw new Error('err.exists')
-    users[key] = { username, passwordHash: await sha256(key + password), invitationCode: invitationCode || null }
+    users[key] = { username, passwordHash: await sha256(key + password), invitationCode: invitationCode || null, createdAt: new Date().toISOString() }
     localStorage.setItem(USERS_KEY, JSON.stringify(users))
-    const session = { username }
+    const session = { username, invitationCode: invitationCode || null, createdAt: users[key].createdAt }
     localStorage.setItem(SESSION_KEY, JSON.stringify(session))
-    setUser(session)
+    setUser(withFlags(session))
   }, [])
 
   const login = useCallback(async ({ username, password }) => {
@@ -72,9 +84,9 @@ export function AuthProvider({ children }) {
     const key = username.toLowerCase()
     const record = read(USERS_KEY, {})[key]
     if (!record || record.passwordHash !== (await sha256(key + password))) throw bad
-    const session = { username: record.username }
+    const session = { username: record.username, invitationCode: record.invitationCode ?? null, createdAt: record.createdAt ?? null }
     localStorage.setItem(SESSION_KEY, JSON.stringify(session))
-    setUser(session)
+    setUser(withFlags(session))
   }, [])
 
   const logout = useCallback(async () => {

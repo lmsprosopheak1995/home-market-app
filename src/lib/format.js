@@ -18,3 +18,5 @@ export function formatDate(iso, locale = 'en-GB') {
 export function isFeatured(p) {
   return Boolean(p?.featuredUntil) && new Date(p.featuredUntil) > new Date()
 }
+
+export const money = (n) => `$${Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 })}`

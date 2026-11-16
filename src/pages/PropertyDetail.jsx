@@ -3,6 +3,8 @@ import { LOCATIONS, PROPERTY_TYPES, PURPOSES, optionLabel } from '../data/option
 import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
 import { formatDate, formatPrice } from '../lib/format'
+import ReserveBox from '../components/ReserveBox.jsx'
+import VerifiedBadge from '../components/VerifiedBadge.jsx'
 
 export default function PropertyDetail() {
   const { t, locale } = useI18n()
@@ -29,6 +31,7 @@ export default function PropertyDetail() {
     p.bathrooms > 0 && [t('spec.bathrooms'), p.bathrooms],
     [t('spec.area'), `${p.area} m²`],
     p.commission != null && [t('spec.commission'), `${p.commission}%`],
+    p.deposit != null && [t('spec.deposit'), `$${Number(p.deposit).toLocaleString('en-US')}`],
     [t('spec.posted'), formatDate(p.createdAt, locale)],
   ].filter(Boolean)
 
@@ -53,6 +56,7 @@ export default function PropertyDetail() {
               {optionLabel(t, 'purpose', PURPOSES, p.purpose)}
             </span>
             <h1 className="mt-2 break-words text-xl font-bold">{p.title}</h1>
+            <VerifiedBadge owner={p.owner} className="mt-1" />
             <p className="mt-1 text-2xl font-bold text-brand">{formatPrice(p.price, p.purpose, t('price.perMonth'))}</p>
             <dl className="mt-4 divide-y divide-line text-sm">
               {specs.map(([k, v]) => (
@@ -76,6 +80,8 @@ export default function PropertyDetail() {
               {t('detail.telegram')}
             </a>
           </section>
+
+          <ReserveBox property={p} />
         </aside>
       </div>
     </div>

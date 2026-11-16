@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient'
 
 const KEY = 'home-market:commissions'
 
-const fromRow = (r) => ({
+export const commissionFromRow = (r) => ({
   id: r.id,
   propertyId: r.property_id,
   propertyTitle: r.property_title,
@@ -15,7 +15,10 @@ const fromRow = (r) => ({
   reference: r.reference,
   createdAt: r.created_at,
   paidAt: r.paid_at,
+  agencyCode: r.agency_code ?? null,
+  agencyShare: r.agency_share == null ? null : Number(r.agency_share),
 })
+const fromRow = commissionFromRow
 
 const readAll = () => {
   try {
@@ -64,7 +67,7 @@ export function useCommissions(owner) {
 
   // កត់ត្រាកិច្ចព្រមព្រៀង (ស្ថានភាពចាប់ផ្តើមជា pending ជានិច្ច)
   const add = useCallback(
-    async ({ propertyId, propertyTitle, dealAmount, rate }) => {
+    async ({ propertyId, propertyTitle, dealAmount, rate, agencyCode = null }) => {
       const amount = Math.round(dealAmount * rate) / 100
       const reference = `HM-C-${Math.random().toString(36).slice(2, 8).toUpperCase()}`
       if (supabase) {
@@ -79,6 +82,7 @@ export function useCommissions(owner) {
             amount,
             status: 'pending',
             reference,
+            agency_code: agencyCode,
           })
           .select()
           .single()
@@ -93,6 +97,8 @@ export function useCommissions(owner) {
         reference,
         createdAt: new Date().toISOString(),
         paidAt: null,
+        agencyCode,
+        agencyShare: null,
       }
       setItems((prev) => {
         const next = [created, ...prev]

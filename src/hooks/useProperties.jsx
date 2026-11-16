@@ -68,10 +68,18 @@ export function PropertiesProvider({ children }) {
     return created
   }, [])
 
+  const updateProperty = useCallback(async (id, patch) => {
+    if (supabase) {
+      const { error } = await supabase.from('properties').update(patch).eq('id', id)
+      if (error) throw new Error(error.message)
+    }
+    setProperties((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)))
+  }, [])
+
   const getById = useCallback((id) => properties.find((p) => p.id === id), [properties])
 
   return (
-    <PropertiesContext.Provider value={{ properties, loading, error, addProperty, getById }}>
+    <PropertiesContext.Provider value={{ properties, loading, error, addProperty, updateProperty, getById }}>
       {children}
     </PropertiesContext.Provider>
   )

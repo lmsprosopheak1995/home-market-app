@@ -8,6 +8,11 @@ import PostProperty from './pages/PostProperty.jsx'
 import Market from './pages/Market.jsx'
 import Me from './pages/Me.jsx'
 import BottomNav from './components/BottomNav.jsx'
+import Verify from './pages/Verify.jsx'
+import Admin from './pages/Admin.jsx'
+import Agency from './pages/Agency.jsx'
+import RequireAdmin from './components/RequireAdmin.jsx'
+import Reservations from './pages/Reservations.jsx'
 import Commissions from './pages/Commissions.jsx'
 import Promote from './pages/Promote.jsx'
 import Login from './pages/Login.jsx'
@@ -36,6 +41,10 @@ export default function App() {
           <Route path="/me" element={<Me />} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/post" element={<RequireAuth><PostProperty /></RequireAuth>} />
+          <Route path="/verify" element={<RequireAuth><Verify /></RequireAuth>} />
+          <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
+          <Route path="/agency" element={<RequireAuth><Agency /></RequireAuth>} />
+          <Route path="/reservations" element={<RequireAuth><Reservations /></RequireAuth>} />
           <Route path="/commissions" element={<RequireAuth><Commissions /></RequireAuth>} />
           <Route path="/promote" element={<RequireAuth><Promote /></RequireAuth>} />
           <Route path="/login" element={<Login />} />

@@ -6,6 +6,7 @@ import { useI18n } from '../hooks/useI18n.jsx'
 import { useProperties } from '../hooks/useProperties.jsx'
 import { resizeImage } from '../lib/image'
 import { COMMISSION } from '../config/payments'
+import { savePaymentDetails } from '../lib/paymentDetails'
 
 const INITIAL = {
   title: '',
@@ -20,6 +21,10 @@ const INITIAL = {
   description: '',
   image: '',
   commission: String(COMMISSION.default),
+  deposit: '',
+  payName: '',
+  payInfo: '',
+  payQr: '',
 }
 
 function validate(f) {
@@ -32,6 +37,9 @@ function validate(f) {
   if (!f.image) e.image = 'val.image'
   const c = Number(f.commission)
   if (!(c >= COMMISSION.min && c <= COMMISSION.max)) e.commission = 'val.commission'
+  if (f.deposit !== '' && !(Number(f.deposit) > 0)) e.deposit = 'val.deposit'
+  const hasPay = f.payInfo.trim() || f.payQr
+  if ((hasPay && f.payName.trim().length < 2) || (f.payName.trim() && !hasPay)) e.pay = 'val.pay'
   return e
 }
 
@@ -64,6 +72,18 @@ export default function PostProperty() {
     }
   }
 
+  async function onQr(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      const payQr = await resizeImage(file, 700, 0.92)
+      setForm((f) => ({ ...f, payQr }))
+      setErrors((er) => ({ ...er, payQr: undefined }))
+    } catch (err) {
+      setErrors((er) => ({ ...er, payQr: err.message }))
+    }
+  }
+
   async function onSubmit(e) {
     e.preventDefault()
     const errs = validate(form)
@@ -86,8 +106,23 @@ export default function PostProperty() {
         description: form.description.trim(),
         image: form.image,
         commission: Number(form.commission),
+        deposit: form.deposit === '' ? null : Number(form.deposit),
         owner: user?.username ?? null,
+        agency_code: user?.invitationCode || null,
       })
+      if (form.payName.trim() && created?.id) {
+        try {
+          await savePaymentDetails({
+            propertyId: created.id,
+            owner: user?.username,
+            name: form.payName.trim(),
+            info: form.payInfo.trim(),
+            qr: form.payQr,
+          })
+        } catch (err) {
+          console.error(err)
+        }
+      }
       navigate(`/property/${created.id}`)
     } catch (err) {
       setSubmitError(`${t('post.submitFail')}: ${err.message}`)
@@ -155,6 +190,12 @@ export default function PostProperty() {
             <p className="mt-1 text-sm text-ink/60">{t('commission.hint')}</p>
             <Err message={errors.commission} />
           </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="deposit" className="label">{t('deposit.label')}</label>
+            <input id="deposit" type="number" inputMode="decimal" min="0" className="field" value={form.deposit} onChange={set('deposit')} />
+            <p className="mt-1 text-sm text-ink/60">{t('deposit.hint')}</p>
+            <Err message={errors.deposit} />
+          </div>
         </div>
 
         <div>
@@ -173,6 +214,26 @@ export default function PostProperty() {
             </div>
           )}
         </div>
+
+        <fieldset className="space-y-3 rounded-lg border border-line p-4">
+          <legend className="px-1 font-semibold">{t('pay.title')}</legend>
+          <p className="text-sm text-ink/60">{t('pay.desc')}</p>
+          <div>
+            <label htmlFor="payName" className="label">{t('pay.name')}</label>
+            <input id="payName" className="field" value={form.payName} onChange={set('payName')} />
+          </div>
+          <div>
+            <label htmlFor="payInfo" className="label">{t('pay.info')}</label>
+            <textarea id="payInfo" rows={2} className="field" value={form.payInfo} onChange={set('payInfo')} />
+          </div>
+          <div>
+            <label htmlFor="payQr" className="label">{t('pay.qr')}</label>
+            <input id="payQr" type="file" accept="image/*" onChange={onQr} className="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-2 file:font-medium file:text-brand" />
+            <Err message={errors.payQr} />
+            {form.payQr && <img src={form.payQr} alt="KHQR" className="mt-2 w-full max-w-[10rem] rounded-lg border border-line" />}
+          </div>
+          <Err message={errors.pay} />
+        </fieldset>
 
         {submitError && <p className="rounded-lg bg-red-50 p-3 text-red-700">{submitError}</p>}
 

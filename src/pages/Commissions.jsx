@@ -44,7 +44,7 @@ export default function Commissions() {
     setBusy(true)
     setFormError('')
     try {
-      await add({ propertyId: listing.id, propertyTitle: listing.title, dealAmount: dealNum, rate })
+      await add({ propertyId: listing.id, propertyTitle: listing.title, dealAmount: dealNum, rate, agencyCode: listing.agency_code ?? null })
       setDeal('')
     } catch (err) {
       setFormError(`${t('post.submitFail')}: ${err.message}`)

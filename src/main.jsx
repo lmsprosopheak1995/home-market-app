@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { I18nProvider } from './hooks/useI18n.jsx'
 import { AuthProvider } from './hooks/useAuth.jsx'
 import { PropertiesProvider } from './hooks/useProperties.jsx'
+import { VerifiedProvider } from './hooks/useVerified.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <I18nProvider>
         <AuthProvider>
           <PropertiesProvider>
-            <App />
+            <VerifiedProvider>
+              <App />
+            </VerifiedProvider>
           </PropertiesProvider>
         </AuthProvider>
       </I18nProvider>

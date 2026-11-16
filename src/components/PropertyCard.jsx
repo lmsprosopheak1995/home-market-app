@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LOCATIONS, PROPERTY_TYPES, PURPOSES, optionLabel } from '../data/options'
+import VerifiedBadge from './VerifiedBadge.jsx'
 import { useI18n } from '../hooks/useI18n.jsx'
 import { formatPrice, isFeatured } from '../lib/format'
 
@@ -27,6 +28,11 @@ export default function PropertyCard({ property }) {
         >
           {optionLabel(t, 'purpose', PURPOSES, purpose)}
         </span>
+        {property.reserved && (
+          <span className="absolute bottom-3 left-3 rounded-md bg-ink/85 px-2 py-0.5 text-sm font-semibold text-white">
+            {t('badge.reserved')}
+          </span>
+        )}
         {isFeatured(property) && (
           <span className="absolute right-3 top-3 rounded-md bg-ink px-2 py-0.5 text-sm font-semibold text-gold">
             {t('badge.featured')}
@@ -36,6 +42,7 @@ export default function PropertyCard({ property }) {
       <div className="p-4">
         <p className="text-xl font-bold text-brand">{formatPrice(price, purpose, t('price.perMonth'))}</p>
         <h3 className="mt-1 line-clamp-1 font-semibold">{title}</h3>
+        <VerifiedBadge owner={property.owner} className="mt-0.5" />
         <p className="text-sm text-ink/60">
           {optionLabel(t, 'type', PROPERTY_TYPES, type)} · {optionLabel(t, 'loc', LOCATIONS, location)}
         </p>
